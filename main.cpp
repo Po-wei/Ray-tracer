@@ -8,10 +8,35 @@
 #include "ray.h"
 
 
+double hit_sphere(const point3& C, double radius, const ray& r)
+{
+    point3 A = r.origin();
+    double c = dot(A-C, A-C) - radius*radius;
+    double b = 2 * dot(r.direction(), A-C);
+    double a = dot(r.direction(), r.direction());
+    double det = b*b - 4*a*c;
+    if( det < 0 )
+    {
+        return -1;
+    }
+    else
+    {
+        return (-b - sqrt(det))/ (2 * a);
+    }
+
+}
+
 color ray_color(const ray& r)
 {
+    auto t = hit_sphere(point3(0,0,-1), 0.5, r);
+
+    if(t > 0.0)
+    {
+        vec3 N = unit_vector(r.at(t) - vec3(0,0,-1));
+        return 0.5 * color(N.x() + 1, N.y() + 1, N.z() +1);
+    }
     vec3 unit_direction = unit_vector(r.direction());
-    auto t = 0.5*(unit_direction.y() + 1.0);
+    t = 0.5*(unit_direction.y() + 1.0);
     return (1.0-t)*color(1.0, 1.0, 1.0) + t*color(0.5, 0.7, 1.0);
 }
 
@@ -30,7 +55,8 @@ int main()
 
     // Render
 
-    canvas cvs;
+    canvas cvs(IMAGE_HEIGHT, std::vector<color>(IMAGE_WIDTH));
+    
     for (int i = 0; i < IMAGE_HEIGHT; i++)
     {
         for (int j = 0; j < IMAGE_WIDTH; j++)
