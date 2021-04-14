@@ -1,5 +1,5 @@
 #ifndef RAY_H
-#define PAY_H
+#define RAY_H
 
 #include "vec3.h"
 
