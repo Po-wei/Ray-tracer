@@ -5,10 +5,6 @@
 #include <limits>
 #include <random>
 
-#include "vec3.h"
-#include "ray.h"
-
-
 
 // Usings
 
@@ -28,15 +24,30 @@ inline double degrees_to_radians(double degrees) {
 }
 
 
-
-
-inline double random_double() {
-    static std::uniform_real_distribution<double> distribution(0.0, 1.0);
+inline double random_double(double start, double end) {
+    static std::uniform_real_distribution<double> distribution(start, end);
     // need seed
     static std::mt19937 generator;
     return distribution(generator);
 }
 
+inline double clamp(double v, double min_val, double max_val)
+{
+    if(v < min_val)
+    {
+        return min_val;
+    }
+    else if(v > max_val)
+    {
+        return max_val;
+    }
+    else
+    {
+        return v;
+    }
+}
 
+#include "vec3.h"
+#include "ray.h"
 
 #endif
