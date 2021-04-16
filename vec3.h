@@ -41,6 +41,14 @@ public:
         return *this *= 1 / t;
     }
 
+
+
+    bool near_zero() const
+    {
+        const auto s = 1e-8;
+        return (fabs(e[0]) < s) && (fabs(e[1]) < s) && (fabs(e[2]) < s);
+    }
+
     double length() const
     {
         return sqrt(length_squared());
@@ -51,11 +59,12 @@ public:
         return e[0] * e[0] + e[1] * e[1] + e[2] * e[2];
     }
 
-
     inline static vec3 random(double min_val, double max_val)
     {
         return vec3(random_double(min_val, max_val), random_double(min_val, max_val), random_double(min_val, max_val));
     }
+
+
 
 private:
     double e[3];
@@ -114,17 +123,30 @@ inline vec3 cross(const vec3 &u, const vec3 &v)
                 u[0] * v[1] - u[1] * v[0]);
 }
 
+inline vec3 reflect(const vec3& v, const vec3& n) 
+{
+    return v - 2*dot(v,n)*n;
+}
+
 inline vec3 unit_vector(vec3 v)
 {
     return v / v.length();
 }
 
-inline vec3 random_in_unit_sphere() {
-    while (true) {
-        auto p = vec3::random(-1,1);
-        if (p.length_squared() >= 1) continue;
+inline vec3 random_in_unit_sphere()
+{
+    while (true)
+    {
+        auto p = vec3::random(-1, 1);
+        if (p.length_squared() >= 1)
+            continue;
         return p;
     }
+}
+
+inline vec3 random_unit_vector()
+{
+    return unit_vector(random_in_unit_sphere());
 }
 
 #endif
